@@ -8,16 +8,28 @@
                 <div class="card-header">Postagens</div>
 
                 <div class="card-body">
-                    <b>|| Adicione aqui as postagens ativas ||</b>
+                    @forelse ($postagens as $postagem)
+                        <div class="card" style="width: 18rem;">
+                            <img src="{{ $postagem->imagem }}" class="card-img-top" alt="{{ $postagem->titulo }}">
 
-                    <div class="card" style="width: 18rem;">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Título</h5>
-                            <p class="card-text">Descrição</p>
-                            <a href="{{ URL::to('postagem') }}" class="btn btn-primary">Abrir postagem</a>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ $postagem->titulo }}
+                                </h5>
+                                <p class="card-text">
+                                    {{ $postagem->descricao }}
+                                </p>
+                                <a href="{{ URL::to('postagem', ['id' => $postagem->id, 'slug' => $postagem->slug()]) }}"
+                                    class="btn btn-primary">
+                                    Abrir
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    @empty
+                        <div class="card" style="width: 18rem;">
+                            <em>Nenhuma postagem encontrada.</em>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
