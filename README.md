@@ -1,30 +1,47 @@
 # challenge
 Desafio DEV CEISC
 
-## Instalação
+## Configurando seu ambiente de desenvolvimento
 
-O projeto precisa de um ambiente com:
- - PHP >= 7.2;
- - Composer;
- - GIT;
- - MySQL;
+### Requirementos
+ - docker
+ - docker-compose
+ - Makefile
 
-Etapas para iniciar:
+### Instalação
 
-1 - Clone o projeto:
+1 - Clone o projeto
 ```shell
 git clone https://github.com/ceisc/challenge.git challenge
 ```
-2 - Renomeie ".env.example" para ".env" e preencha os dados de conexão de sua base de dados local (DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD)
 
-3 - Crie uma database local com o nome 'challenge'
-
-4 - Rode os script para criar as tabelas:
+2 - Execute o instalador
 ```shell
-php artisan migrate
-php artisan db:seed
+make install
 ```
-5 - Configure seu ambiente local para acessar o arquivo root "public/index.php" OU abra um terminal na raíz do projeto e rode "php artisan serve"
+
+3 - Adicione o host de testes ao seu arquivo `/etc/hosts`
+```
+127.0.0.1       ceisc-app.local
+```
+
+4 - Verifique que tudo esta funcionando corretamente, acessando http://ceisc-app.local:8000
+
+### Testando
+Para realizar os testes automaticos do phpunit, basta executar o comando `make test`
+```shell
+make test
+```
+
+### Terminando de desenvolver
+
+Apos completar o desenvolvimento, lembre-se de encerrar os containers criados
+pelo docker-compose.
+
+```shell
+make down
+make docker-prune
+```
 
 ## Agora, mãos a obra ^^
 
