@@ -1,6 +1,7 @@
 
 COMPOSER ?= docker exec -it ceisc-app composer
 LARAVEL ?= docker exec -it ceisc-app php artisan
+MYSQL ?= docker exec -it ceisc-db mysql
 
 PHPUNIT ?= docker exec -it ceisc-app vendor/bin/phpunit
 
@@ -40,6 +41,10 @@ database:
 	@echo '=> Populates a database based on our migration files.'
 	$(LARAVEL) migrate
 	$(LARAVEL) db:seed
+
+.PHONY: mysql
+mysql:
+	$(MYSQL) -uroot -p
 
 .PHONY: test
 test: cc composer
