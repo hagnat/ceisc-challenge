@@ -2,6 +2,8 @@
 COMPOSER ?= docker exec -it ceisc-app composer
 LARAVEL ?= docker exec -it ceisc-app php artisan
 
+PHPUNIT ?= docker exec -it ceisc-app vendor/bin/phpunit
+
 install: docker-pull docker-build up env composer database
 	@echo '=> Install complete!'
 	@echo 'You can now access your application via http://ceisc-app.local:8000'
@@ -41,7 +43,7 @@ database:
 
 .PHONY: test
 test: cc composer
-	bin/phpunit
+	$(PHPUNIT)
 
 .PHONY: ci
 ci: clear composer test
