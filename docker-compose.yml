@@ -26,8 +26,8 @@ services:
     volumes:
       - ./run/var:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=super-secure-password
-      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_PASSWORD=super-secret-password
+      - MYSQL_DATABASE=challenge
       - MYSQL_USER=dbuser
       - MYSQL_PASSWORD=super-secret-password
     networks:

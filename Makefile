@@ -33,7 +33,7 @@ cc:
 clear:
 	$(LARAVEL) optimize:clear
 
-.PHONY: db
+.PHONY: database
 database:
 	@echo '=> Populates a database based on our migration files.'
 	$(LARAVEL) migrate
@@ -50,19 +50,25 @@ ci: clear composer test
 
 # docker-compose triggers
 
+.PHONY: docker-pull
 docker-pull:
 	@echo '=> Pull all docker images from their repositories'
 	docker-compose pull
 
+.PHONY: docker-build
 docker-build:
 	docker-compose build
 
+.PHONY: docker-prune
 docker-prune:
 	docker system prune -a -f
+	rm -rf run/var
 
+.PHONY: up
 up:
 	docker-compose up -d
 
+.PHONY: down
 down:
 	docker-compose down
 
