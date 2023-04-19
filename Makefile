@@ -5,7 +5,7 @@ MYSQL ?= docker exec -it ceisc-db mysql
 
 PHPUNIT ?= docker exec -it ceisc-app vendor/bin/phpunit
 
-install: env docker-pull docker-build up composer database
+install: env docker-pull docker-build up composer database public/storage
 	@echo '=> Install complete!'
 	@echo 'You can now access your application via http://ceisc-app.local:8000'
 	@echo 'You may need to update your /etc/hosts file.'
@@ -45,6 +45,9 @@ database:
 .PHONY: mysql
 mysql:
 	$(MYSQL) -uroot -p
+
+public/storage:
+	$(LARAVEL) storage:link
 
 .PHONY: test
 test: cc composer
