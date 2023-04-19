@@ -23,6 +23,20 @@ class PostsController extends Controller
         return view('novo');
     }
 
+    public function create(Request $request)
+    {
+        $post = new Postagem();
+
+        $post->titulo = $request->titulo;
+        $post->descricao = $request->descricao;
+        $post->imagem = $request->file('imagem')->store('posts', 'public');
+        $post->ativa = Postagem::NAO_PUBLICADO;
+
+        $post->save();
+
+        return $this->jsonResponse($post);
+    }
+
     public function publish(int $id)
     {
         $post = Postagem::findOrFail($id);

@@ -24,8 +24,13 @@ class PublicController extends Controller
      */
     public function index()
     {
+        $posts = ModelPostagem::where('ativa', 'S')
+                              ->orderBy('created_at', 'desc')
+                              ->take(10)
+                              ->get();
+
         return view('public', [
-            'postagens' => ModelPostagem::where('ativa', 'S'),
+            'postagens' => $posts,
         ]);
     }
 

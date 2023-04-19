@@ -5,12 +5,37 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Nova postagem</div>
+                <div class="card-header">
+                    Nova Postagem
+                </div>
 
                 <div class="card-body">
-                    <b>|| Adicione aqui o cadastro da postagem, campos na base de dados, tabela POSTAGEM ||</b>
-                    <br>
-                    <b>|| Usar AJAX no submit e uma barra de progresso (envio em % ou bytes, qualquer comunicação de andamento) ||</b>
+                    {!! Form::open(['route' => 'admin.posts.create', 'files' => true]) !!}
+
+                        <div class='form-group'>
+                            {!! Form::label('titulo') !!}
+                            {!! Form::text('titulo', null, ['class' => 'form-control']) !!}
+                        </div>
+
+                        <div class='form-group'>
+                            {!! Form::label('descricao') !!}
+                            {!! Form::text('descricao', null, ['class' => 'form-control', 'style' => 'height: 200px']) !!}
+                            <!-- pq eh assim que se cria um campo textarea, neh grassi ? ;) -->
+                        </div>
+
+                        <div class='form-group'>
+                            {!! Form::label('imagem') !!}
+                            {!! Form::file('imagem', null, ['class' => 'form-control-file']) !!}
+                        </div>
+
+                        <div class='form-group text-right'>
+                            <a href="{{ route('home') }}" class="btn btn-link">
+                                Cancel
+                            </a>
+                            {!! Form::submit('Save', ['class' => 'btn btn-primary']); !!}
+                        <div class='form-group'>
+
+                    {!! Form::close() !!}
                 </div>
             </div>
         </div>
