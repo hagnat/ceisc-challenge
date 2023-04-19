@@ -7,12 +7,91 @@
             <div class="card">
                 <div class="card-header">Postagens</div>
 
-                <button type="button" class="btn btn-labeled btn-success col-2 m-2" onclick="window.location='{{ URL::to('posts/novo') }}'">
+                <button type="button" class="btn btn-labeled btn-success col-2 m-2"
+                    onclick="window.location='{{ route('admin.posts.new') }}'">
                     + Nova
                 </button>
 
                 <div class="card-body">
-                    <b>|| Adicione aqui uma listagem de postagens, com botão de publicar e remover ||</b>
+                    <table width="100%">
+                        <colgroup>
+                            <col width="50%">
+                            <col width="10%">
+                            <col width="40%">
+                        </colgroup>
+
+                        <thead>
+                            <tr>
+                                <th>Titulo</th>
+                                <th>Ativo</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse ($postagens as $postagem)
+                                <tr>
+                                    <th>
+                                        {{ $postagem->titulo }}
+                                    </th>
+
+                                    <td>
+                                        @if ($postagem->published())
+                                            <strong>
+                                                Ativo
+                                            </strong>
+                                        @else
+                                            Inativo
+                                        @endif
+                                    </td>
+
+                                    <td class="text-right">
+                                        <ul class='list-inline'>
+                                            <li class="list-inline-item">
+                                                <a href="{{ route('admin.posts.edit', ['id' => $postagem->id]) }}"
+                                                    class="btn btn-sm btn-primary">
+                                                    Editar
+                                                </a>
+                                            </li>
+
+                                            @if ($postagem->published())
+                                                <li class="list-inline-item">
+                                                    <a href="{{ route('admin.posts.unpublish', ['id' => $postagem->id]) }}"
+                                                        class="btn btn-sm btn-warning">
+                                                        Despublicar
+                                                    </a>
+                                                </li>
+
+                                            @else
+                                                <li class="list-inline-item">
+                                                    <a href="{{ route('admin.posts.publish', ['id' => $postagem->id]) }}"
+                                                        class="btn btn-sm btn-info">
+                                                        Publicar
+                                                    </a>
+                                                </li>
+
+                                            @endif
+
+                                            <li class="list-inline-item">
+                                                <a href="{{ route('admin.posts.remove', ['id' => $postagem->id]) }}"
+                                                    class="btn btn-sm btn-danger">
+                                                    Remover
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+
+                            @empty
+                                <tr>
+                                    <td colspan=5>
+                                        <em>Nenhuma postagem encontrada.</em>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+
+                    </table>
                 </div>
             </div>
         </div>
