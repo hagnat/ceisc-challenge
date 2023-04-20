@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Storage;
 use App\Postagem;
 
 class PostsController extends Controller
@@ -15,22 +17,25 @@ class PostsController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function novo()
+    public function novo(): Renderable
     {
-        return view('novo');
+        return view('novo', [
+            'post' => new Postagem(),
+        ]);
     }
 
-    public function create(Request $request)
+    public function edit(int $id): Renderable
     {
-        $post = new Postagem();
+        return view('novo', [
+            'post' => Postagem::findOrFail($id),
+        ]);
+    }
 
-        $post->titulo = $request->titulo;
-        $post->descricao = $request->descricao;
-        $post->imagem = $request->file('imagem')->store('posts', 'public');
-        $post->ativa = Postagem::NAO_PUBLICADO;
+    public function save(Request $request)
+    {
+        $post = $request->id
+            ? $this->update($request->id, $request)
+            : $this->create($request);
 
         $post->save();
 
@@ -57,9 +62,54 @@ class PostsController extends Controller
 
     public function remove(int $id)
     {
-        Postagem::destroy($id);
+        $post = Postagem::find($id);
+
+        if ($post) {
+            $this->pruneFiles($post->imagem);
+            $post->delete();
+        }
 
         return response()->json([]);
+    }
+
+    protected function create(Request $request): Postagem
+    {
+        $request->validate([
+            'imagem' => 'required|mimes:png,gif,jpg,jpeg|max:2048',
+        ]);
+
+        $post = new Postagem();
+
+        $post->titulo = $request->titulo;
+        $post->descricao = $request->descricao;
+        $post->imagem = $request->file('imagem')->store('posts', 'public');
+        $post->ativa = Postagem::NAO_PUBLICADO;
+
+        return $post;
+    }
+
+    protected function update(int $postId, Request $request): Postagem
+    {
+        $request->validate([
+            'imagem' => 'mimes:png,gif,jpg,jpeg|max:2048',
+        ]);
+
+        $post = Postagem::findOrFail($postId);
+
+        $post->titulo = $request->titulo;
+        $post->descricao = $request->descricao;
+
+        if ($request->hasFile('imagem')) {
+            $this->pruneFiles($post->imagem);
+            $post->imagem = $request->file('imagem')->store('posts', 'public');
+        }
+
+        return $post;
+    }
+
+    protected function pruneFiles(string $filename): void
+    {
+        Storage::delete('public/' . $filename);
     }
 
     protected function jsonResponse(Postagem $post)
