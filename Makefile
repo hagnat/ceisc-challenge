@@ -36,6 +36,11 @@ cc:
 clear:
 	$(LARAVEL) optimize:clear
 
+.PHONY: prune
+prune:
+	rm -rf run/var
+	rm -rf storage/public/*
+
 .PHONY: database
 database:
 	@echo '=> Populates a database based on our migration files.'
@@ -70,9 +75,8 @@ docker-build:
 	docker-compose build
 
 .PHONY: docker-prune
-docker-prune:
+docker-prune: | prune
 	docker system prune -a -f
-	rm -rf run/var
 
 .PHONY: up
 up:
