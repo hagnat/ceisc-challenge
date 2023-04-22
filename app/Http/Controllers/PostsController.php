@@ -39,7 +39,7 @@ class PostsController extends Controller
 
         $post->save();
 
-        return $this->jsonResponse($post);
+        return redirect()->route('home');
     }
 
     public function publish(int $id)
