@@ -29,8 +29,8 @@
                         </thead>
 
                         <tbody>
-                            @forelse ($postagens as $postagem)
-                                <tr>
+                            @foreach ($postagens as $postagem)
+                                <tr class='post'>
                                     <th>
                                         {{ $postagem->titulo }}
                                     </th>
@@ -68,21 +68,20 @@
 
                                             <li class="list-inline-item">
                                                 <a href="{{ route('admin.posts.remove', ['id' => $postagem->id]) }}"
-                                                    class="btn btn-sm btn-danger">
+                                                    class="btn btn-sm btn-danger remove">
                                                     Remover
                                                 </a>
                                             </li>
                                         </ul>
                                     </td>
                                 </tr>
+                            @endforeach
 
-                            @empty
-                                <tr>
-                                    <td colspan=5>
-                                        <em>Nenhuma postagem encontrada.</em>
-                                    </td>
-                                </tr>
-                            @endforelse
+                            <tr class="no-posts {{ count($postagens) > 0 ? 'd-none' : '' }}">
+                                <td colspan=5>
+                                    <em>Nenhuma postagem encontrada.</em>
+                                </td>
+                            </tr>
                         </tbody>
 
                     </table>
@@ -100,11 +99,30 @@
             $.ajax({
                 url: button.attr('href'),
                 success: function(result) {
-                    console.log(result);
+                    // toggles the buttons 'publish' and 'unpublish'
                     $('.publish').parent('li').toggleClass('d-none');
 
+                    // toggles the active status message
                     let ativo = result.ativa == 'S' ? 'Ativo' : 'Inativo';
                     post.find('.published').text(ativo);
+                }
+            })
+            return false;
+        });
+
+        $('.remove').click(function(){
+            let button = $(this);
+            let post = button.parents('TR');
+
+            $.ajax({
+                url: button.attr('href'),
+                success: function(result) {
+                    post.remove();
+
+                    // show 'no posts found' row if no posts left
+                    if ($('.post').length == 0) {
+                        $('.no-posts').removeClass('d-none');
+                    }
                 }
             })
             return false;
