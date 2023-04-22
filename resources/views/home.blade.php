@@ -35,11 +35,9 @@
                                         {{ $postagem->titulo }}
                                     </th>
 
-                                    <td>
+                                    <td class='published'>
                                         @if ($postagem->published())
-                                            <strong>
-                                                Ativo
-                                            </strong>
+                                            Ativo
                                         @else
                                             Inativo
                                         @endif
@@ -54,23 +52,19 @@
                                                 </a>
                                             </li>
 
-                                            @if ($postagem->published())
-                                                <li class="list-inline-item">
-                                                    <a href="{{ route('admin.posts.unpublish', ['id' => $postagem->id]) }}"
-                                                        class="btn btn-sm btn-warning">
-                                                        Despublicar
-                                                    </a>
-                                                </li>
+                                            <li class="list-inline-item {{ $postagem->published() ? '' : 'd-none' }}">
+                                                <a href="{{ route('admin.posts.unpublish', ['id' => $postagem->id]) }}"
+                                                    class="btn btn-sm btn-warning publish">
+                                                    Despublicar
+                                                </a>
+                                            </li>
 
-                                            @else
-                                                <li class="list-inline-item">
-                                                    <a href="{{ route('admin.posts.publish', ['id' => $postagem->id]) }}"
-                                                        class="btn btn-sm btn-info">
-                                                        Publicar
-                                                    </a>
-                                                </li>
-
-                                            @endif
+                                            <li class="list-inline-item {{ $postagem->published() ? 'd-none' : '' }}">
+                                                <a href="{{ route('admin.posts.publish', ['id' => $postagem->id]) }}"
+                                                    class="btn btn-sm btn-info publish">
+                                                    Publicar
+                                                </a>
+                                            </li>
 
                                             <li class="list-inline-item">
                                                 <a href="{{ route('admin.posts.remove', ['id' => $postagem->id]) }}"
@@ -97,4 +91,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        $('.publish').click(function(){
+            let button = $(this);
+            let post = button.parents('TR');
+            $.ajax({
+                url: button.attr('href'),
+                success: function(result) {
+                    console.log(result);
+                    $('.publish').parent('li').toggleClass('d-none');
+
+                    let ativo = result.ativa == 'S' ? 'Ativo' : 'Inativo';
+                    post.find('.published').text(ativo);
+                }
+            })
+            return false;
+        });
+    });
+</script>
 @endsection
